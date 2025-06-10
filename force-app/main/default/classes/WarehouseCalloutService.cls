@@ -1,9 +1,8 @@
-public with sharing class WarehouseCalloutService {
+public with sharing class WarehouseCalloutService implements Queueable, Database.AllowsCallouts {
     
     private static final String WAREHOUSE_URL = 'https://th-superbadge-apex.herokuapp.com/equipment';
     
-    @future(callout=true)
-    public static void getEquipments() {
+    public void execute(QueueableContext context) {
         Http http = new Http();
         
         HttpRequest request = new HttpRequest();
