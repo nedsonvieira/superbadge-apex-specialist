@@ -3,6 +3,7 @@ public with sharing class WarehouseCalloutService implements Queueable, Database
     private static final String WAREHOUSE_URL = 'https://th-superbadge-apex.herokuapp.com/equipment';
     
     public void execute(QueueableContext context) {
+        
         Http http = new Http();
         
         HttpRequest request = new HttpRequest();
@@ -31,13 +32,14 @@ public with sharing class WarehouseCalloutService implements Queueable, Database
                     eq.Current_Inventory__c = dto.quantity;
                     eq.Lifespan_Months__c = dto.lifespan;
                     eq.Maintenance_Cycle__c = dto.maintenanceperiod;
-                    eq.StockKeepingUnit = dto.sku;
+                    eq.Warehouse_SKU__c = dto.sku;
                     
                     lstEquipments.add(eq);
                 }
                 
                 if (!lstEquipments.isEmpty()) {
-                    upsert as user lstEquipments;
+                    upsert as user lstEquipments Product2.Fields.Warehouse_SKU__c;
+                    System.debug('Upsert - Equipamentos: ' + lstEquipments);
                 }
             } else {
                 System.debug('Erro na resposta do callout: ' + response.getStatusCode() + ' - ' + response.getBody());
