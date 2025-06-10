@@ -1,10 +1,8 @@
 public with sharing class MaintenanceRequestHelper {
-    
-    public static void updateWorkOrders(List<Case> newOrders, Map<Id,Case> oldOrdersMap) {
-        // TODO: Complete the method to update workorders
+    public static void updateworkOrders(List<Case> lstNewOrders, Map<Id,Case> oldOrdersMap) {
         Set<Id> validIds = new Set<Id>();
         
-        for (Case c : newOrders) {
+        for (Case c : lstNewOrders) {
             if (c.Status == 'Closed' && oldOrdersMap.get(c.Id).Status != 'Closed'
                 &&
             (c.Type == 'Repair' || c.Type == 'Routine Maintenance')) {
@@ -65,15 +63,15 @@ public with sharing class MaintenanceRequestHelper {
         }
         
         if (!lstNewRequests.isEmpty()) {
-            insert newRequestsLst;
+            insert as user lstNewRequests;
         }
         
         List<Equipment_Maintenance_Item__c> itemsToClone = new List<Equipment_Maintenance_Item__c>();
-        for (Case c : newRequestsLst) {
+        for (Case c : lstNewRequests) {
             Case parentRequest = closedRequestsMap.get(c.ParentId);
             
-            if (parentCase != null && parentCase.Equipment_Maintenance_Items__r != null) {
-                for (Equipment_Maintenance_Item__c item : parentCase.Equipment_Maintenance_Items__r) {
+            if (parentRequest != null && parentRequest.Equipment_Maintenance_Items__r != null) {
+                for (Equipment_Maintenance_Item__c item : parentRequest.Equipment_Maintenance_Items__r) {
                     Equipment_Maintenance_Item__c clonedItem = new Equipment_Maintenance_Item__c();
                     clonedItem.Maintenance_Request__c = c.Id;
                     clonedItem.Equipment__c = item.Equipment__c;
@@ -85,7 +83,7 @@ public with sharing class MaintenanceRequestHelper {
         }
         
         if (!itemsToClone.isEmpty()) {
-            insert itemsToClone;
+            insert as user itemsToClone;
         }
     }
 }
